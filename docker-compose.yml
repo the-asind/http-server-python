@@ -61,17 +61,18 @@ services:
       - weather
 
   test:
-    build: .
-    command: pytest -v
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    command: python -m pytest -v
     environment:
       PYTHONPATH: /app
       FLASK_APP: server.py
       FLASK_ENV: testing
       DB_URL: "sqlite:///:memory:"
+      SQLALCHEMY_TRACK_MODIFICATIONS: "False"
     volumes:
-      - ./app:/app
-    networks:
-      - app_network
+      - .:/app
 
 networks:
   app_network:

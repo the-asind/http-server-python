@@ -59,7 +59,7 @@ rectangle "External System Boundary" as ExternalZone EXTERNAL_ZONE {
     [Weather API Service] as weatherAPI
 }
 
-rectangle "Server Boundary" as ServerZone #SERVER_ZONE {
+rectangle "Server Boundary" as ServerZone SERVER_ZONE {
     node "Infrastructure Layer" {
         component "Nginx Reverse Proxy" as nginx
         database "PostgreSQL DB" as db
