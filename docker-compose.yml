@@ -1,0 +1,39 @@
+services:
+  nginx:
+    build: 
+      context: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+      - weather
+    networks:
+      - app_network
+
+  web:
+    build: 
+      context: ./http-server-python
+      dockerfile: Dockerfile
+    environment:
+      - FLASK_APP=server.py
+      - FLASK_DEBUG=1
+    networks:
+      - app_network
+    expose:
+      - "5000"
+
+  weather:
+    build: 
+      context: ./http-server-python
+      dockerfile: Dockerfile.weather
+    expose:
+      - "5001"
+    environment:
+      - WEATHER_API_KEY=${WEATHER_API_KEY}
+    restart: always
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
