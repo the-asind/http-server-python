@@ -1,13 +1,26 @@
 import base64
 from flask import Flask, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from config import DB_URL
+from weather_service import get_weather_info
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
+db = SQLAlchemy(app)
 
 # In-memory "database"
 users_db = {}
 current_id = 1
 admins = {'admin': 'admin123'}  # username: password
 regulars = {}  # username: password
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80))
+    password = db.Column(db.String(80))
+    role = db.Column(db.String(20))
+
+db.create_all()
 
 def check_auth(request):
     auth_header = request.headers.get('Authorization')
@@ -87,6 +100,12 @@ def update_user(user_id):
         else:
             return jsonify({'error': 'Forbidden'}), 403
     return jsonify({'error': 'Unauthorized'}), 401
+
+@app.route('/weather', methods=['GET'])
+def weather():
+    city = request.args.get('city', 'Moscow')
+    info = get_weather_info(city)
+    return jsonify(info)
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
