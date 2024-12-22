@@ -104,7 +104,7 @@ def index():
     return jsonify({
         "status": "running",
         "endpoints": {
-            "weather": "/weather?city=<city_name>",
+            "weather": "/api/weather/{city}",  # Updated format
             "users": "/users",
             "user": "/user/<id>"
         }

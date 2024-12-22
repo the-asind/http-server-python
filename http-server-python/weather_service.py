@@ -1,7 +1,7 @@
 import requests
 import os
 from dotenv import load_dotenv
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from config import WEATHER_API_KEY
 
 load_dotenv()
@@ -12,7 +12,10 @@ app = Flask(__name__)
 
 @app.route('/weather')
 def get_weather():
-    weather_data = get_weather_info()
+    city = request.args.get('city', 'Moscow')
+    if not city:
+        return jsonify({"error": "City parameter is required"}), 400
+    weather_data = get_weather_info(city)
     return jsonify(weather_data)
 
 def get_weather_info(city="Novosibirsk"):
