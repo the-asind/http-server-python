@@ -1,39 +1,69 @@
 services:
+  db:
+    container_name: postgres_db
+    image: postgres:13
+    environment:
+      POSTGRES_DB: userdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    container_name: flask_web
+    environment:
+      - FLASK_APP=server.py
+      - FLASK_ENV=development
+      - DB_URL=postgresql://postgres:postgres@db:5432/userdb
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app:/app
+    networks:
+      - app_network
+    depends_on:
+      db:
+        condition: service_healthy
+
+  weather:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.weather
+    container_name: weather_service
+    environment:
+      - WEATHER_API_KEY=${WEATHER_API_KEY}
+    ports:
+      - "5001:5001"
+    networks:
+      - app_network
+
   nginx:
-    build: 
-      context: ./nginx
+    image: nginx:alpine
+    container_name: nginx
     ports:
       - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - app_network
     depends_on:
       - web
       - weather
-    networks:
-      - app_network
-
-  web:
-    build: 
-      context: ./http-server-python
-      dockerfile: Dockerfile
-    environment:
-      - FLASK_APP=server.py
-      - FLASK_DEBUG=1
-    networks:
-      - app_network
-    expose:
-      - "5000"
-
-  weather:
-    build: 
-      context: ./http-server-python
-      dockerfile: Dockerfile.weather
-    expose:
-      - "5001"
-    environment:
-      - WEATHER_API_KEY=${WEATHER_API_KEY}
-    restart: always
-    networks:
-      - app_network
 
 networks:
   app_network:
+    name: app_network
     driver: bridge
+
+volumes:
+  pgdata:

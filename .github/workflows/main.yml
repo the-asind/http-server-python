@@ -13,4 +13,4 @@ jobs:
         run: pip install flask requests pytest pytest-flask
       - name: Run server tests
         run: |
-          PYTHONPATH=$PYTHONPATH:$(pwd) pytest tests/
+          PYTHONPATH=$PYTHONPATH:$(pwd) pytest app/tests/

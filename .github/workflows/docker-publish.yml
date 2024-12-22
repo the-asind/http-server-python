@@ -26,14 +26,14 @@ jobs:
       - name: Build and push Web service
         uses: docker/build-push-action@v2
         with:
-          context: ./http-server-python
+          context: ./app
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.WEB_IMAGE_NAME }}:latest
 
       - name: Build and push Weather service
         uses: docker/build-push-action@v2
         with:
-          context: ./http-server-python
-          file: ./http-server-python/Dockerfile.weather
+          context: ./app
+          file: ./app/Dockerfile.weather
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.WEATHER_IMAGE_NAME }}:latest
