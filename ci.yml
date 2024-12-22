@@ -10,7 +10,7 @@ jobs:
         with:
           python-version: '3.9'
       - name: Install testing dependencies
-        run: pip install flask requests pytest
+        run: pip install flask requests pytest pytest-flask
       - name: Run server tests
         run: |
-          pytest
+          PYTHONPATH=$PYTHONPATH:$(pwd) pytest tests/

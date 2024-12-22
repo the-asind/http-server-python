@@ -3,11 +3,6 @@
 ## Overview
 This project is a simple HTTP server implemented in Python. It is designed to handle basic HTTP requests and serve static files.
 
-## Features
-- Handles GET and POST requests
-- Serves static files from a specified directory
-- Simple and easy to configure
-
 ## Installation
 To install the required dependencies, run:
 ```bash
