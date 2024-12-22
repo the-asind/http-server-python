@@ -61,10 +61,8 @@ services:
       - weather
 
   test:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-    command: python -m pytest -v
+    build: .
+    command: python -m pytest -v app/tests/
     environment:
       PYTHONPATH: /app
       FLASK_APP: server.py
