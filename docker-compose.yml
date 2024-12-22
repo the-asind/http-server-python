@@ -60,6 +60,19 @@ services:
       - web
       - weather
 
+  test:
+    build: .
+    command: pytest -v
+    environment:
+      PYTHONPATH: /app
+      FLASK_APP: server.py
+      FLASK_ENV: testing
+      DB_URL: "sqlite:///:memory:"
+    volumes:
+      - ./app:/app
+    networks:
+      - app_network
+
 networks:
   app_network:
     name: app_network
