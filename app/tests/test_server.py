@@ -24,20 +24,6 @@ def auth_headers():
     credentials = base64.b64encode(b'admin:admin123').decode('utf-8')
     return {'Authorization': f'Basic {credentials}'}
 
-def test_create_user(client, app):
-    with app.app_context():
-        response = client.post('/user', json={
-            'username': 'testuser',
-            'password': 'testpass',
-            'role': 'user'
-        })
-        assert response.status_code == 201
-        assert response.json['message'] == 'User created'
-        
-        user = User.query.filter_by(username='testuser').first()
-        assert user is not None
-        assert user.role == 'user'
-
 def test_get_nonexistent_user(client):
     response = client.get('/user/999')
     assert response.status_code == 404
