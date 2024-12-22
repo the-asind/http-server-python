@@ -1,0 +1,11 @@
+[Unit]
+Description=HTTP Server
+After=network.target
+
+[Service]
+WorkingDirectory=/d:/Projects/Repos/http_server/http-server-python
+ExecStart=/usr/bin/python3 server.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

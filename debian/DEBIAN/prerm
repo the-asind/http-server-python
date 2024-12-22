@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+systemctl stop http_server.service || true
+systemctl disable http_server.service || true
+rm -rf /tmp/http_server_temp
+exit 0

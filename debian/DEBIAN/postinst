@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+systemctl daemon-reload
+systemctl enable http_server.service
+systemctl start http_server.service
+exit 0
