@@ -1,13 +1,21 @@
 import requests
 import os
 from dotenv import load_dotenv
+from flask import Flask, jsonify
+from config import WEATHER_API_KEY
 
 load_dotenv()
 
-WEATHER_API_KEY = os.getenv('WEATHER_API_KEY', '')
 BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
 
-def get_weather_info(city="Moscow"):
+app = Flask(__name__)
+
+@app.route('/weather')
+def get_weather():
+    weather_data = get_weather_info()
+    return jsonify(weather_data)
+
+def get_weather_info(city="Novosibirsk"):
     """Get real weather data from OpenWeatherMap API"""
     try:
         params = {
@@ -37,3 +45,6 @@ def get_weather_info(city="Moscow"):
             "error": "Invalid weather data received",
             "details": str(e)
         }
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001)

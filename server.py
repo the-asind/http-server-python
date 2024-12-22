@@ -20,8 +20,6 @@ class User(db.Model):
     password = db.Column(db.String(80))
     role = db.Column(db.String(20))
 
-db.create_all()
-
 def check_auth(request):
     auth_header = request.headers.get('Authorization')
     if not auth_header:
@@ -101,6 +99,17 @@ def update_user(user_id):
             return jsonify({'error': 'Forbidden'}), 403
     return jsonify({'error': 'Unauthorized'}), 401
 
+@app.route('/')
+def index():
+    return jsonify({
+        "status": "running",
+        "endpoints": {
+            "weather": "/weather?city=<city_name>",
+            "users": "/users",
+            "user": "/user/<id>"
+        }
+    })
+
 @app.route('/weather', methods=['GET'])
 def weather():
     city = request.args.get('city', 'Moscow')
@@ -108,4 +117,6 @@ def weather():
     return jsonify(info)
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    with app.app_context():
+        db.create_all()
+    app.run(host='0.0.0.0', port=5000, debug=True)

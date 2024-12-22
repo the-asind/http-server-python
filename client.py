@@ -66,12 +66,4 @@ def interactive_mode():
         input("\nPress Enter to continue...")
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        # Keep existing command line interface for backward compatibility
-        if sys.argv[1] == 'delete':
-            user_id = int(sys.argv[2])
-            username = sys.argv[3]
-            password = sys.argv[4]
-            print(delete_user(user_id, username, password))
-    else:
-        interactive_mode()
+    interactive_mode()
